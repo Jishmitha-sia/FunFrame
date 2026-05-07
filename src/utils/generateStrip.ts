@@ -6,39 +6,40 @@ export const generatePhotoStrip = async (
 
   if (!ctx) throw new Error("Canvas not supported");
 
-  // 🌸 Portrait booth dimensions
-  const stripWidth = 420;
+  // 🌸 Realistic strip proportions
+  const stripWidth = 340;
 
-  const photoWidth = 340;
-  const photoHeight = 420;
+  const imageWidth = 260;
+  const imageHeight = 195;
 
-  const gap = 24;
-  const padding = 40;
+  const padding = 24;
+  const gap = 16;
 
-  const footerHeight = 100;
+  const footerHeight = 80;
 
   canvas.width = stripWidth;
 
   canvas.height =
-    photos.length * photoHeight +
+    photos.length * imageHeight +
     (photos.length - 1) * gap +
     padding * 2 +
     footerHeight;
 
-  // 🌸 Soft pastel background
+  // 🌸 Background
   ctx.fillStyle = "#fff7fb";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+  // 🌸 Draw images
   for (let i = 0; i < photos.length; i++) {
     const img = new Image();
     img.src = photos[i];
 
     await new Promise<void>((resolve) => {
       img.onload = () => {
-        const x = (stripWidth - photoWidth) / 2;
+        const x = (stripWidth - imageWidth) / 2;
 
         const y =
-          padding + i * (photoHeight + gap);
+          padding + i * (imageHeight + gap);
 
         ctx.save();
 
@@ -46,21 +47,20 @@ export const generatePhotoStrip = async (
           ctx,
           x,
           y,
-          photoWidth,
-          photoHeight,
-          28
+          imageWidth,
+          imageHeight,
+          18
         );
 
         ctx.clip();
 
-        // 🌸 Keep aspect ratio properly
-        drawImageCover(
-          ctx,
+        // ✅ NORMAL IMAGE RENDERING
+        ctx.drawImage(
           img,
           x,
           y,
-          photoWidth,
-          photoHeight
+          imageWidth,
+          imageHeight
         );
 
         ctx.restore();
@@ -70,26 +70,26 @@ export const generatePhotoStrip = async (
     });
   }
 
-  // 🌸 Footer branding
+  // 🌸 Footer
   ctx.fillStyle = "#ff4fa3";
-  ctx.font = "bold 30px Poppins";
+  ctx.font = "bold 22px Poppins";
   ctx.textAlign = "center";
 
   ctx.fillText(
     "FunFrame ✨",
     stripWidth / 2,
-    canvas.height - 45
+    canvas.height - 34
   );
 
   ctx.fillStyle = "#999";
-  ctx.font = "18px Poppins";
+  ctx.font = "14px Poppins";
 
   const date = new Date().toLocaleDateString();
 
   ctx.fillText(
     date,
     stripWidth / 2,
-    canvas.height - 15
+    canvas.height - 12
   );
 
   return canvas.toDataURL("image/png");
@@ -140,41 +140,4 @@ function roundRect(
   ctx.quadraticCurveTo(x, y, x + radius, y);
 
   ctx.closePath();
-}
-
-// 🌸 Proper image crop helper
-function drawImageCover(
-  ctx: CanvasRenderingContext2D,
-  img: HTMLImageElement,
-  x: number,
-  y: number,
-  width: number,
-  height: number
-) {
-  const imgRatio = img.width / img.height;
-  const boxRatio = width / height;
-
-  let drawWidth = width;
-  let drawHeight = height;
-
-  let offsetX = 0;
-  let offsetY = 0;
-
-  if (imgRatio > boxRatio) {
-    drawHeight = height;
-    drawWidth = height * imgRatio;
-    offsetX = (width - drawWidth) / 2;
-  } else {
-    drawWidth = width;
-    drawHeight = width / imgRatio;
-    offsetY = (height - drawHeight) / 2;
-  }
-
-  ctx.drawImage(
-    img,
-    x + offsetX,
-    y + offsetY,
-    drawWidth,
-    drawHeight
-  );
 }

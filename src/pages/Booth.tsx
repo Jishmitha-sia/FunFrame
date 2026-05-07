@@ -2,6 +2,8 @@ import { useRef, useState } from "react";
 import Camera from "../components/Camera";
 import type { CameraHandle } from "../components/Camera";
 import PhotoPreview from "../components/PhotoPreview";
+import StripPreview from "../components/StripPreview";
+import { generatePhotoStrip } from "../utils/generateStrip";
 
 const Booth = () => {
   const cameraRef = useRef<CameraHandle>(null);
@@ -10,6 +12,7 @@ const Booth = () => {
   const [photos, setPhotos] = useState<string[]>([]);
   const [isCapturing, setIsCapturing] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [strip, setStrip] = useState<string | null>(null);
 
   const wait = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
@@ -28,6 +31,7 @@ const Booth = () => {
 
     setPhotos([]);
     setShowPreview(false);
+    setStrip(null);
     setIsCapturing(true);
 
     for (let i = 0; i < 4; i++) {
@@ -44,6 +48,12 @@ const Booth = () => {
 
     setIsCapturing(false);
     setShowPreview(true);
+  };
+
+  const handleGenerateStrip = async () => {
+    const generatedStrip = await generatePhotoStrip(photos);
+
+    setStrip(generatedStrip);
   };
 
   return (
@@ -81,7 +91,7 @@ const Booth = () => {
         ))}
       </div>
 
-      {/* Preview Modal */}
+      {/* Photo Preview Modal */}
       {showPreview && (
         <PhotoPreview
           photos={photos}
@@ -89,6 +99,15 @@ const Booth = () => {
             setPhotos([]);
             setShowPreview(false);
           }}
+          onGenerate={handleGenerateStrip}
+        />
+      )}
+
+      {/* Strip Preview Modal */}
+      {strip && (
+        <StripPreview
+          strip={strip}
+          onClose={() => setStrip(null)}
         />
       )}
     </div>

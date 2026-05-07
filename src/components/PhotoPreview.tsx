@@ -1,9 +1,14 @@
 type Props = {
   photos: string[];
   onRetake: () => void;
+  onGenerate: () => void;
 };
 
-const PhotoPreview = ({ photos, onRetake }: Props) => {
+const PhotoPreview = ({
+  photos,
+  onRetake,
+  onGenerate,
+}: Props) => {
   return (
     <div className="absolute inset-0 bg-black/80 backdrop-blur-sm z-20 flex items-center justify-center">
       <div className="bg-white rounded-3xl p-6 w-[90%] max-w-md">
@@ -30,6 +35,7 @@ const PhotoPreview = ({ photos, onRetake }: Props) => {
           </button>
 
           <button
+            onClick={onGenerate}
             className="flex-1 bg-pink-500 text-white py-3 rounded-xl"
           >
             Generate Strip

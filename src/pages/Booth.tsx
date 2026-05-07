@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import Camera from "../components/Camera";
 import type { CameraHandle } from "../components/Camera";
+import PhotoPreview from "../components/PhotoPreview";
 
 const Booth = () => {
   const cameraRef = useRef<CameraHandle>(null);
@@ -8,6 +9,7 @@ const Booth = () => {
   const [countdown, setCountdown] = useState<number | null>(null);
   const [photos, setPhotos] = useState<string[]>([]);
   const [isCapturing, setIsCapturing] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   const wait = (ms: number) =>
     new Promise((resolve) => setTimeout(resolve, ms));
@@ -25,6 +27,7 @@ const Booth = () => {
     if (isCapturing) return;
 
     setPhotos([]);
+    setShowPreview(false);
     setIsCapturing(true);
 
     for (let i = 0; i < 4; i++) {
@@ -40,6 +43,7 @@ const Booth = () => {
     }
 
     setIsCapturing(false);
+    setShowPreview(true);
   };
 
   return (
@@ -48,24 +52,26 @@ const Booth = () => {
 
       {/* Countdown */}
       {countdown !== null && (
-        <div className="absolute inset-0 flex items-center justify-center text-white text-8xl font-bold">
+        <div className="absolute inset-0 flex items-center justify-center text-white text-8xl font-bold z-10">
           {countdown}
         </div>
       )}
 
       {/* Capture Button */}
-      <div className="absolute bottom-10 w-full flex justify-center">
-        <button
-          onClick={startPhotobooth}
-          disabled={isCapturing}
-          className="bg-white text-black px-8 py-4 rounded-full text-lg disabled:opacity-50"
-        >
-          {isCapturing ? "Capturing..." : "Start Booth"}
-        </button>
-      </div>
+      {!showPreview && (
+        <div className="absolute bottom-10 w-full flex justify-center z-10">
+          <button
+            onClick={startPhotobooth}
+            disabled={isCapturing}
+            className="bg-white text-black px-8 py-4 rounded-full text-lg disabled:opacity-50"
+          >
+            {isCapturing ? "Capturing..." : "Start Booth"}
+          </button>
+        </div>
+      )}
 
       {/* Preview Photos */}
-      <div className="absolute top-4 left-4 flex gap-2">
+      <div className="absolute top-4 left-4 flex gap-2 z-10">
         {photos.map((photo, index) => (
           <img
             key={index}
@@ -74,6 +80,17 @@ const Booth = () => {
           />
         ))}
       </div>
+
+      {/* Preview Modal */}
+      {showPreview && (
+        <PhotoPreview
+          photos={photos}
+          onRetake={() => {
+            setPhotos([]);
+            setShowPreview(false);
+          }}
+        />
+      )}
     </div>
   );
 };

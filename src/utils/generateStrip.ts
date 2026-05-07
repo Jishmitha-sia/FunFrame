@@ -1,45 +1,102 @@
+import type { BoothTheme } from "../types/theme";
+
 export const generatePhotoStrip = async (
-  photos: string[]
+  photos: string[],
+  theme: BoothTheme
 ): Promise<string> => {
-  const canvas = document.createElement("canvas");
-  const ctx = canvas.getContext("2d");
+  return new Promise((resolve) => {
+    const canvas = document.createElement("canvas");
 
-  if (!ctx) throw new Error("Canvas not supported");
+    const ctx = canvas.getContext("2d");
 
-  // 🌸 Realistic strip proportions
-  const stripWidth = 340;
+    if (!ctx) return;
 
-  const imageWidth = 260;
-  const imageHeight = 195;
+    canvas.width = 420;
+    canvas.height = 1400;
 
-  const padding = 24;
-  const gap = 16;
+    // =========================
+    // THEME COLORS
+    // =========================
 
-  const footerHeight = 80;
+    let background = "#fff1f7";
+    let titleColor = "#ff4fa3";
+    let footerColor = "#ff4fa3";
 
-  canvas.width = stripWidth;
+    if (theme === "retro") {
+      background = "#f5e6cc";
+      titleColor = "#7a4b00";
+      footerColor = "#7a4b00";
+    }
 
-  canvas.height =
-    photos.length * imageHeight +
-    (photos.length - 1) * gap +
-    padding * 2 +
-    footerHeight;
+    if (theme === "neon") {
+      background = "#111111";
+      titleColor = "#d946ef";
+      footerColor = "#d946ef";
+    }
 
-  // 🌸 Background
-  ctx.fillStyle = "#fff7fb";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    // Background
+    ctx.fillStyle = background;
+    ctx.fillRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
 
-  // 🌸 Draw images
-  for (let i = 0; i < photos.length; i++) {
-    const img = new Image();
-    img.src = photos[i];
+    // Title
+    ctx.fillStyle = titleColor;
+    ctx.font = "bold 34px Poppins";
+    ctx.textAlign = "center";
 
-    await new Promise<void>((resolve) => {
-      img.onload = () => {
-        const x = (stripWidth - imageWidth) / 2;
+    let title = "Aesthetic Booth";
 
-        const y =
-          padding + i * (imageHeight + gap);
+    if (theme === "retro") {
+      title = "Retro Booth";
+    }
+
+    if (theme === "neon") {
+      title = "Neon Booth";
+    }
+
+    ctx.fillText(title, 210, 70);
+
+    // =========================
+    // DRAW PHOTOS
+    // =========================
+
+    let loadedImages = 0;
+
+    photos.forEach((photo, index) => {
+      const image = new Image();
+
+      image.src = photo;
+
+      image.onload = () => {
+        const x = 40;
+
+        const y = 120 + index * 290;
+
+        const width = 340;
+
+        const height = 240;
+
+        // Shadow
+        ctx.shadowColor = "rgba(0,0,0,0.15)";
+        ctx.shadowBlur = 15;
+
+        // Rounded photo container
+        ctx.fillStyle = "white";
+
+        roundRect(
+          ctx,
+          x - 10,
+          y - 10,
+          width + 20,
+          height + 20,
+          20
+        );
+
+        ctx.fill();
 
         ctx.save();
 
@@ -47,55 +104,78 @@ export const generatePhotoStrip = async (
           ctx,
           x,
           y,
-          imageWidth,
-          imageHeight,
+          width,
+          height,
           18
         );
 
         ctx.clip();
 
-        // ✅ NORMAL IMAGE RENDERING
+        // NORMAL photo ratio
         ctx.drawImage(
-          img,
+          image,
+          0,
+          0,
+          image.width,
+          image.height,
           x,
           y,
-          imageWidth,
-          imageHeight
+          width,
+          height
         );
 
         ctx.restore();
 
-        resolve();
+        loadedImages++;
+
+        // =========================
+        // FOOTER
+        // =========================
+
+        if (
+          loadedImages === photos.length
+        ) {
+          ctx.shadowBlur = 0;
+
+          ctx.fillStyle = footerColor;
+
+          ctx.font =
+            "bold 26px Poppins";
+
+          ctx.fillText(
+            "FunFrame ✨",
+            210,
+            1320
+          );
+
+          ctx.fillStyle = "#999";
+
+          ctx.font = "18px Poppins";
+
+          const today =
+            new Date().toLocaleDateString();
+
+          ctx.fillText(
+            today,
+            210,
+            1360
+          );
+
+          resolve(
+            canvas.toDataURL(
+              "image/png"
+            )
+          );
+        }
       };
     });
-  }
-
-  // 🌸 Footer
-  ctx.fillStyle = "#ff4fa3";
-  ctx.font = "bold 22px Poppins";
-  ctx.textAlign = "center";
-
-  ctx.fillText(
-    "FunFrame ✨",
-    stripWidth / 2,
-    canvas.height - 34
-  );
-
-  ctx.fillStyle = "#999";
-  ctx.font = "14px Poppins";
-
-  const date = new Date().toLocaleDateString();
-
-  ctx.fillText(
-    date,
-    stripWidth / 2,
-    canvas.height - 12
-  );
-
-  return canvas.toDataURL("image/png");
+  });
 };
 
-// 🌸 Rounded rectangle helper
+// =========================
+// ROUNDED RECTANGLE
+// =========================
+
 function roundRect(
   ctx: CanvasRenderingContext2D,
   x: number,
@@ -108,7 +188,10 @@ function roundRect(
 
   ctx.moveTo(x + radius, y);
 
-  ctx.lineTo(x + width - radius, y);
+  ctx.lineTo(
+    x + width - radius,
+    y
+  );
 
   ctx.quadraticCurveTo(
     x + width,
@@ -117,7 +200,10 @@ function roundRect(
     y + radius
   );
 
-  ctx.lineTo(x + width, y + height - radius);
+  ctx.lineTo(
+    x + width,
+    y + height - radius
+  );
 
   ctx.quadraticCurveTo(
     x + width,
@@ -126,7 +212,10 @@ function roundRect(
     y + height
   );
 
-  ctx.lineTo(x + radius, y + height);
+  ctx.lineTo(
+    x + radius,
+    y + height
+  );
 
   ctx.quadraticCurveTo(
     x,
@@ -135,9 +224,17 @@ function roundRect(
     y + height - radius
   );
 
-  ctx.lineTo(x, y + radius);
+  ctx.lineTo(
+    x,
+    y + radius
+  );
 
-  ctx.quadraticCurveTo(x, y, x + radius, y);
+  ctx.quadraticCurveTo(
+    x,
+    y,
+    x + radius,
+    y
+  );
 
   ctx.closePath();
 }

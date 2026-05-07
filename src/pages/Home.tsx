@@ -1,21 +1,24 @@
-type Props = {
-  onStart: () => void;
-};
+import { useNavigate } from "react-router-dom";
 
-const Home = ({ onStart }: Props) => {
+const Home = () => {
+  const navigate = useNavigate();
+
   return (
-    <div className="h-screen flex flex-col items-center justify-center bg-black text-white">
-      <h1 className="text-5xl font-bold mb-6">FunFrame 🎞️</h1>
+    <div className="h-screen bg-black flex flex-col items-center justify-center text-white px-6">
+      <h1 className="text-7xl font-bold mb-6">
+        FunFrame ✨
+      </h1>
 
-      <p className="mb-8 text-gray-400">
-        Capture your moments in style
+      <p className="text-white/60 text-xl mb-10 text-center max-w-xl">
+        Create aesthetic photobooth memories
+        with themed booth experiences.
       </p>
 
       <button
-        onClick={onStart}
-        className="px-6 py-3 bg-white text-black rounded-xl hover:scale-105 transition"
+        onClick={() => navigate("/themes")}
+        className="bg-pink-500 hover:bg-pink-600 transition px-8 py-4 rounded-full text-xl font-medium"
       >
-        Start Booth
+        Start Experience
       </button>
     </div>
   );

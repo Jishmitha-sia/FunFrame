@@ -1,55 +1,72 @@
 type Props = {
-  strip: string;
+  stripUrl: string;
   onClose: () => void;
 };
 
 const StripPreview = ({
-  strip,
+  stripUrl,
   onClose,
 }: Props) => {
-  const downloadStrip = () => {
-    const link = document.createElement("a");
-
-    link.href = strip;
-    link.download = "funframe-strip.png";
-
-    link.click();
-  };
-
   return (
-    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm z-30 flex items-center justify-center p-4">
-      <div className="bg-[#fff7fb] rounded-3xl w-full max-w-md max-h-[90vh] flex flex-col overflow-hidden shadow-2xl">
-        
-        {/* Header */}
-        <div className="p-5 border-b border-pink-100">
-          <h2 className="text-3xl font-bold text-center text-pink-500">
-            Your Aesthetic Strip ✨
-          </h2>
-        </div>
-
-        {/* Scrollable strip */}
-        <div className="flex-1 overflow-y-auto p-4 flex justify-center">
+    <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-6">
+      <div
+        className="
+          bg-white
+          rounded-[40px]
+          p-8
+          w-[500px]
+          max-h-[90vh]
+          overflow-y-auto
+          shadow-2xl
+        "
+      >
+        <div className="flex justify-center">
           <img
-            src={strip}
-            className="rounded-3xl shadow-lg w-full max-w-[320px]"
+            src={stripUrl}
+            className="
+              w-[320px]
+              rounded-3xl
+              shadow-xl
+            "
           />
         </div>
 
-        {/* Buttons */}
-        <div className="p-4 flex gap-3 border-t border-pink-100 bg-white">
+        <div className="flex gap-4 mt-8">
           <button
             onClick={onClose}
-            className="flex-1 bg-black text-white py-3 rounded-2xl font-medium"
+            className="
+              flex-1
+              py-4
+              rounded-2xl
+              bg-black
+              text-white
+              text-2xl
+              font-bold
+              hover:scale-105
+              transition-all
+            "
           >
             Close
           </button>
 
-          <button
-            onClick={downloadStrip}
-            className="flex-1 bg-pink-500 hover:bg-pink-600 transition text-white py-3 rounded-2xl font-medium"
+          <a
+            href={stripUrl}
+            download="photobooth-strip.png"
+            className="
+              flex-1
+              py-4
+              rounded-2xl
+              bg-pink-500
+              text-white
+              text-2xl
+              font-bold
+              text-center
+              hover:scale-105
+              transition-all
+            "
           >
             Download
-          </button>
+          </a>
         </div>
       </div>
     </div>

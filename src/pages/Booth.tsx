@@ -17,7 +17,8 @@ const Booth = () => {
   const [countdown, setCountdown] =
     useState<number | null>(null);
 
-  const [photos, setPhotos] = useState<string[]>([]);
+  const [photos, setPhotos] =
+    useState<string[]>([]);
 
   const [isCapturing, setIsCapturing] =
     useState(false);
@@ -25,151 +26,202 @@ const Booth = () => {
   const [showPreview, setShowPreview] =
     useState(false);
 
-  const [strip, setStrip] =
-    useState<string | null>(null);
+  const [stripUrl, setStripUrl] =
+    useState("");
 
-  // Selected theme
-  const selectedTheme =
-    (localStorage.getItem(
-      "booth-theme"
-    ) as BoothTheme) || "aesthetic";
+  const [selectedTheme] =
+    useState<BoothTheme>("aesthetic");
 
-  const theme = themeConfig[selectedTheme];
+  const [flash, setFlash] =
+    useState(false);
 
-  const wait = (ms: number) =>
-    new Promise((resolve) =>
-      setTimeout(resolve, ms)
-    );
+  const currentTheme =
+    themeConfig[selectedTheme];
 
-  // Countdown
-  const runCountdown = async () => {
-    for (let i = 3; i > 0; i--) {
-      setCountdown(i);
+  const capturePhoto = () => {
+    const photo =
+      cameraRef.current?.capture();
 
-      await wait(1000);
+    if (photo) {
+      setPhotos((prev) => [
+        ...prev,
+        photo,
+      ]);
+
+      // FLASH EFFECT
+      setFlash(true);
+
+      setTimeout(() => {
+        setFlash(false);
+      }, 120);
     }
-
-    setCountdown(null);
   };
 
-  // Start photobooth
-  const startPhotobooth = async () => {
+  const startCapture = async () => {
     if (isCapturing) return;
 
     setPhotos([]);
-
-    setShowPreview(false);
-
-    setStrip(null);
-
     setIsCapturing(true);
 
     for (let i = 0; i < 4; i++) {
-      await runCountdown();
+      let count = 3;
 
-      const photo =
-        cameraRef.current?.capture();
+      setCountdown(count);
 
-      if (photo) {
-        setPhotos((prev) => [
-          ...prev,
-          photo,
-        ]);
-      }
+      await new Promise<void>(
+        (resolve) => {
+          const interval =
+            setInterval(() => {
+              count--;
 
-      await wait(500);
+              if (count === 0) {
+                clearInterval(
+                  interval
+                );
+
+                capturePhoto();
+
+                setCountdown(null);
+
+                resolve();
+              } else {
+                setCountdown(count);
+              }
+            }, 1000);
+        }
+      );
+
+      await new Promise((r) =>
+        setTimeout(r, 500)
+      );
     }
 
     setIsCapturing(false);
-
     setShowPreview(true);
   };
 
-  // Generate strip
-  const handleGenerateStrip =
-    async () => {
-      const generatedStrip =
-        await generatePhotoStrip(
-          photos,
-          selectedTheme
-        );
+  const generateStrip = async () => {
+    const url =
+      await generatePhotoStrip(
+        photos,
+        selectedTheme
+      );
 
-      setStrip(generatedStrip);
-    };
+    setStripUrl(url);
+  };
 
   return (
-    <div
-      className={`h-screen relative overflow-hidden ${theme.background}`}
-    >
-      {/* Camera */}
+    <div className="relative w-screen h-screen overflow-hidden bg-black">
+      {/* CAMERA */}
       <Camera ref={cameraRef} />
 
-      {/* Dark overlay */}
+      {/* DARK OVERLAY */}
+      <div className="absolute inset-0 bg-black/35 backdrop-blur-[2px]" />
+
+      {/* FLASH EFFECT */}
+      {flash && (
+        <div className="absolute inset-0 bg-white z-50 animate-pulse" />
+      )}
+
+      {/* THEME BADGE */}
       <div
-        className={`absolute inset-0 ${theme.overlay}`}
-      />
-
-      {/* Theme Badge */}
-      <div className="absolute top-5 left-5 z-20">
-        <div
-          className={`px-5 py-3 rounded-full bg-white/90 backdrop-blur-md text-sm font-bold shadow-lg ${theme.text}`}
-        >
-          {selectedTheme.toUpperCase()} BOOTH
-        </div>
+        className={`
+          absolute top-8 left-8 z-20
+          px-8 py-4
+          rounded-full
+          shadow-2xl
+          border
+          text-2xl
+          font-bold
+          tracking-wide
+          backdrop-blur-md
+          ${currentTheme.badge}
+        `}
+      >
+        {currentTheme.name.toUpperCase()}
       </div>
 
-      {/* Countdown */}
-      {countdown !== null && (
-        <div className="absolute inset-0 flex items-center justify-center z-30">
-          <div className="text-white text-9xl font-bold drop-shadow-2xl">
-            {countdown}
-          </div>
-        </div>
-      )}
-
-      {/* Start Button */}
-      {!showPreview && (
-        <div className="absolute bottom-10 w-full flex justify-center z-20">
-          <button
-            onClick={startPhotobooth}
-            disabled={isCapturing}
-            className={`${theme.button} text-white px-10 py-5 rounded-full text-xl font-semibold transition-all duration-300 shadow-2xl disabled:opacity-50`}
-          >
-            {isCapturing
-              ? "Capturing..."
-              : "Start Booth"}
-          </button>
-        </div>
-      )}
-
-      {/* Small Preview Photos */}
-      <div className="absolute top-5 right-5 flex gap-2 z-20">
-        {photos.map((photo, index) => (
+      {/* LIVE PREVIEW */}
+      {photos.length > 0 && (
+        <div className="absolute top-8 right-8 z-20">
           <img
-            key={index}
-            src={photo}
-            className="w-16 h-16 rounded-xl object-cover border-2 border-white shadow-lg"
+            src={photos[photos.length - 1]}
+            className="
+              w-24 h-24
+              object-cover
+              rounded-3xl
+              border-4 border-white
+              shadow-2xl
+            "
           />
-        ))}
+        </div>
+      )}
+
+      {/* COUNTDOWN */}
+      {countdown && (
+        <div className="absolute inset-0 z-30 flex items-center justify-center">
+          <h1
+            className="
+              text-white
+              text-[180px]
+              font-extrabold
+              drop-shadow-[0_0_40px_rgba(255,255,255,0.9)]
+              animate-pulse
+              select-none
+            "
+          >
+            {countdown}
+          </h1>
+        </div>
+      )}
+
+      {/* BUTTON */}
+      <div className="absolute bottom-20 left-1/2 -translate-x-1/2 z-20">
+        <button
+          onClick={startCapture}
+          disabled={isCapturing}
+          className={`
+            px-14 py-6
+            rounded-full
+            text-3xl
+            font-bold
+            transition-all
+            duration-300
+            shadow-2xl
+            active:scale-95
+            hover:scale-105
+            ${currentTheme.button}
+          `}
+        >
+          {isCapturing
+            ? "Capturing..."
+            : "Start Booth"}
+        </button>
       </div>
 
-      {/* Photo Preview Modal */}
-      {showPreview && (
+      {/* PHOTO PREVIEW */}
+      {showPreview && !stripUrl && (
         <PhotoPreview
           photos={photos}
+          onClose={() =>
+            setShowPreview(false)
+          }
           onRetake={() => {
             setPhotos([]);
             setShowPreview(false);
           }}
-          onGenerate={handleGenerateStrip}
+          onGenerate={generateStrip}
         />
       )}
 
-      {/* Strip Preview */}
-      {strip && (
+      {/* STRIP PREVIEW */}
+      {stripUrl && (
         <StripPreview
-          strip={strip}
-          onClose={() => setStrip(null)}
+          stripUrl={stripUrl}
+          onClose={() => {
+            setStripUrl("");
+            setShowPreview(false);
+          }}
         />
       )}
     </div>

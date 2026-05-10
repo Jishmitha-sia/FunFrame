@@ -1,17 +1,10 @@
+import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+
+const stickers = ["✨", "💖", "🎀", "😎", "🔥", "🌸"];
 
 const filters = [
-  "none",
-  "grayscale(1)",
-  "sepia(1)",
-  "contrast(1.4)",
-  "brightness(1.2)",
-  "saturate(1.8)",
-];
-
-const filterNames = [
   "Normal",
   "B&W",
   "Vintage",
@@ -20,15 +13,20 @@ const filterNames = [
   "Pop",
 ];
 
-const stickers = ["✨", "💖", "🎀", "😎", "🔥", "🌸"];
+type StickerType = {
+  id: number;
+  emoji: string;
+  size: number;
+};
 
-const Booth = () => {
+export default function Booth() {
   const navigate = useNavigate();
 
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  const [selectedFilter, setSelectedFilter] = useState(0);
-  const [selectedSticker, setSelectedSticker] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("Normal");
+
+  const [stickerItems, setStickerItems] = useState<StickerType[]>([]);
 
   useEffect(() => {
     startCamera();
@@ -43,184 +41,256 @@ const Booth = () => {
       if (videoRef.current) {
         videoRef.current.srcObject = stream;
       }
-    } catch (error) {
-      console.error(error);
-      alert("Camera access denied");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const addSticker = (emoji: string) => {
+    setStickerItems((prev) => [
+      ...prev,
+      {
+        id: Date.now(),
+        emoji,
+        size: 90,
+      },
+    ]);
+  };
+
+  const removeSticker = (id: number) => {
+    setStickerItems((prev) =>
+      prev.filter((item) => item.id !== id)
+    );
+  };
+
+  const increaseSize = (id: number) => {
+    setStickerItems((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? { ...item, size: item.size + 10 }
+          : item
+      )
+    );
+  };
+
+  const decreaseSize = (id: number) => {
+    setStickerItems((prev) =>
+      prev.map((item) =>
+        item.id === id
+          ? { ...item, size: Math.max(40, item.size - 10) }
+          : item
+      )
+    );
+  };
+
+  const getFilterClass = () => {
+    switch (selectedFilter) {
+      case "B&W":
+        return "grayscale";
+
+      case "Vintage":
+        return "sepia";
+
+      case "Contrast":
+        return "contrast-150";
+
+      case "Bright":
+        return "brightness-125";
+
+      case "Pop":
+        return "saturate-200";
+
+      default:
+        return "";
     }
   };
 
   return (
-    <div
-      className="
-        min-h-screen
-        bg-black
-        text-white
-        px-6
-        py-10
-      "
-    >
-      {/* TOP BAR */}
-      <div
-        className="
-          flex
-          items-center
-          justify-between
-          mb-10
-        "
-      >
-        <button
-          onClick={() => navigate("/templates")}
-          className="
-            text-gray-300
-            hover:text-white
-            transition-all
-          "
-        >
-          ← Back
-        </button>
+    <div className="min-h-screen bg-black text-white px-6 py-10">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex items-center justify-between mb-10">
+          <button
+            onClick={() => navigate("/templates")}
+            className="text-white/80 hover:text-pink-400 transition"
+          >
+            ← Back
+          </button>
 
-        <h1
-          className="
-            text-2xl
-            md:text-3xl
-            font-bold
-          "
-        >
-          Camera Booth
-        </h1>
-
-        <button
-          onClick={() => navigate("/preview")}
-          className="
-            bg-white
-            text-black
-            px-6
-            py-3
-            rounded-full
-            font-semibold
-            hover:scale-105
-            transition-all
-          "
-        >
-          Preview →
-        </button>
-      </div>
-
-      {/* MAIN GRID */}
-      <div
-        className="
-          grid
-          lg:grid-cols-[1fr_350px]
-          gap-8
-        "
-      >
-        {/* CAMERA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="
-            relative
-            rounded-[40px]
-            overflow-hidden
-            border
-            border-white/10
-            bg-white/5
-            backdrop-blur-xl
-          "
-        >
-          <video
-            ref={videoRef}
-            autoPlay
-            playsInline
-            muted
-            style={{
-              filter: filters[selectedFilter],
-            }}
+          <h1
             className="
-              w-full
-              h-[75vh]
-              object-cover
-            "
-          />
-
-          {/* STICKER */}
-          {selectedSticker && (
-            <div
-              className="
-                absolute
-                top-10
-                right-10
-                text-7xl
-              "
-            >
-              {selectedSticker}
-            </div>
-          )}
-
-          {/* CAPTURE BUTTON */}
-          <div
-            className="
-              absolute
-              bottom-8
-              left-1/2
-              -translate-x-1/2
+              text-5xl
+              font-black
+              tracking-tight
+              bg-gradient-to-r
+              from-pink-400
+              to-purple-400
+              bg-clip-text
+              text-transparent
             "
           >
+            FunFrame Studio
+          </h1>
+
+          <button
+            onClick={() => navigate("/preview")}
+            className="
+              bg-white
+              text-black
+              px-8
+              py-4
+              rounded-full
+              text-lg
+              font-bold
+              hover:scale-105
+              transition
+            "
+          >
+            Preview →
+          </button>
+        </div>
+
+        <div className="grid lg:grid-cols-[1fr_320px] gap-8">
+          <div
+            className="
+              relative
+              bg-[#111]
+              rounded-[2.5rem]
+              overflow-hidden
+              aspect-video
+              border
+              border-white/10
+            "
+          >
+            <video
+              ref={videoRef}
+              autoPlay
+              muted
+              playsInline
+              className={`
+                w-full
+                h-full
+                object-cover
+                ${getFilterClass()}
+              `}
+            />
+
+            {stickerItems.map((sticker) => (
+              <motion.div
+                key={sticker.id}
+                drag
+                dragMomentum={false}
+                className="
+                  absolute
+                  top-20
+                  left-20
+                  z-50
+                  cursor-grab
+                  active:cursor-grabbing
+                  select-none
+                  flex
+                  flex-col
+                  items-center
+                "
+              >
+                <div
+                  style={{
+                    fontSize: `${sticker.size}px`,
+                  }}
+                >
+                  {sticker.emoji}
+                </div>
+
+                <div className="flex gap-2 mt-2">
+                  <button
+                    onClick={() =>
+                      increaseSize(sticker.id)
+                    }
+                    className="
+                      bg-black/70
+                      px-2
+                      rounded-lg
+                    "
+                  >
+                    +
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      decreaseSize(sticker.id)
+                    }
+                    className="
+                      bg-black/70
+                      px-2
+                      rounded-lg
+                    "
+                  >
+                    -
+                  </button>
+
+                  <button
+                    onClick={() =>
+                      removeSticker(sticker.id)
+                    }
+                    className="
+                      bg-red-500
+                      px-2
+                      rounded-lg
+                    "
+                  >
+                    x
+                  </button>
+                </div>
+              </motion.div>
+            ))}
+
             <button
               className="
-                w-24
-                h-24
+                absolute
+                bottom-10
+                left-1/2
+                -translate-x-1/2
+                w-28
+                h-28
                 rounded-full
                 bg-white
-                border-[10px]
-                border-pink-400
+                border-[12px]
+                border-pink-500
                 hover:scale-110
-                transition-all
+                transition
               "
-            />
+            ></button>
           </div>
-        </motion.div>
 
-        {/* SIDEBAR */}
-        <div
-          className="
-            bg-white/5
-            border
-            border-white/10
-            rounded-[40px]
-            p-6
-            backdrop-blur-xl
-            h-fit
-          "
-        >
-          {/* FILTERS */}
-          <div className="mb-10">
-            <h2
-              className="
-                text-2xl
-                font-bold
-                mb-6
-              "
-            >
+          <div
+            className="
+              bg-[#090909]
+              border
+              border-white/10
+              rounded-[2.5rem]
+              p-6
+            "
+          >
+            <h2 className="text-4xl font-black mb-8">
               Filters
             </h2>
 
-            <div className="grid grid-cols-2 gap-4">
-              {filterNames.map((filter, index) => (
+            <div className="grid grid-cols-2 gap-4 mb-12">
+              {filters.map((filter) => (
                 <button
-                  key={index}
-                  onClick={() => setSelectedFilter(index)}
+                  key={filter}
+                  onClick={() => setSelectedFilter(filter)}
                   className={`
                     rounded-2xl
-                    py-4
-                    px-4
-                    transition-all
+                    py-5
+                    text-lg
+                    font-semibold
+                    transition
                     border
 
                     ${
-                      selectedFilter === index
+                      selectedFilter === filter
                         ? "bg-white text-black border-white"
-                        : "bg-white/5 border-white/10 hover:bg-white/10"
+                        : "bg-[#121212] border-white/10 hover:border-pink-400"
                     }
                   `}
                 >
@@ -228,34 +298,26 @@ const Booth = () => {
                 </button>
               ))}
             </div>
-          </div>
 
-          {/* STICKERS */}
-          <div>
-            <h2
-              className="
-                text-2xl
-                font-bold
-                mb-6
-              "
-            >
+            <h2 className="text-4xl font-black mb-8">
               Stickers
             </h2>
 
             <div className="grid grid-cols-3 gap-4">
-              {stickers.map((sticker, index) => (
+              {stickers.map((sticker) => (
                 <button
-                  key={index}
-                  onClick={() => setSelectedSticker(sticker)}
+                  key={sticker}
+                  onClick={() => addSticker(sticker)}
                   className="
-                    h-20
+                    h-24
                     rounded-2xl
-                    bg-white/5
+                    bg-[#121212]
                     border
                     border-white/10
-                    text-4xl
-                    hover:bg-white/10
-                    transition-all
+                    text-5xl
+                    hover:border-pink-400
+                    hover:scale-105
+                    transition
                   "
                 >
                   {sticker}
@@ -267,6 +329,4 @@ const Booth = () => {
       </div>
     </div>
   );
-};
-
-export default Booth;
+}

@@ -3,6 +3,7 @@ type Props = {
   onClose: () => void;
   onRetake: () => void;
   onGenerate: () => void;
+  onGenerateGif: () => void;
 };
 
 const PhotoPreview = ({
@@ -10,6 +11,7 @@ const PhotoPreview = ({
   onClose,
   onRetake,
   onGenerate,
+  onGenerateGif,
 }: Props) => {
   return (
     <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-6">
@@ -43,16 +45,15 @@ const PhotoPreview = ({
           ))}
         </div>
 
-        <div className="flex gap-4 mt-8">
+        <div className="grid grid-cols-3 gap-4 mt-8">
           <button
             onClick={onRetake}
             className="
-              flex-1
               py-4
               rounded-2xl
               bg-black
               text-white
-              text-2xl
+              text-xl
               font-bold
               hover:scale-105
               transition-all
@@ -64,25 +65,40 @@ const PhotoPreview = ({
           <button
             onClick={onGenerate}
             className="
-              flex-1
               py-4
               rounded-2xl
               bg-pink-500
               text-white
-              text-2xl
+              text-xl
               font-bold
               hover:scale-105
               transition-all
             "
           >
-            Generate Strip
+            Strip
+          </button>
+
+          <button
+            onClick={onGenerateGif}
+            className="
+              py-4
+              rounded-2xl
+              bg-purple-600
+              text-white
+              text-xl
+              font-bold
+              hover:scale-105
+              transition-all
+            "
+          >
+            GIF
           </button>
         </div>
 
         <button
           onClick={onClose}
           className="
-            mt-4
+            mt-6
             w-full
             text-gray-500
             text-lg

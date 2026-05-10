@@ -1,24 +1,18 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Home from "./pages/Home";
+import Templates from "./pages/Templates";
 import Booth from "./pages/Booth";
-import Themes from "./pages/Themes";
+import Preview from "./pages/Preview";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-
-        <Route
-          path="/themes"
-          element={<Themes />}
-        />
-
-        <Route
-          path="/booth"
-          element={<Booth />}
-        />
+        <Route path="/templates" element={<Templates />} />
+        <Route path="/booth" element={<Booth />} />
+        <Route path="/preview" element={<Preview />} />
       </Routes>
     </BrowserRouter>
   );

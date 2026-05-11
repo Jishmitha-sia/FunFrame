@@ -126,7 +126,13 @@ export default function Templates() {
 
             <motion.div
               key={template.id}
-              whileHover={{ y: -10, scale: 1.03 }}
+              whileHover={{
+                y: -12,
+                scale: 1.025,
+              }}
+              whileTap={{
+                scale: 0.98,
+              }}
               transition={{ duration: 0.25 }}
 
               onClick={() =>
@@ -149,6 +155,7 @@ export default function Templates() {
                 transition
                 shadow-2xl
                 overflow-hidden
+                group
               "
             >
 
@@ -156,6 +163,7 @@ export default function Templates() {
 
               <div
                 className="
+                  relative
                   h-[320px]
                   rounded-[2rem]
                   bg-gradient-to-b
@@ -165,9 +173,65 @@ export default function Templates() {
                   items-center
                   justify-center
                   mb-6
+                  overflow-hidden
                 "
               >
-                {template.preview}
+                <motion.div
+                  className="
+                    absolute
+                    inset-y-0
+                    left-[-70%]
+                    w-1/2
+                    bg-white/15
+                    blur-2xl
+                    rotate-12
+                  "
+                  animate={{
+                    x: ["0%", "360%"],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                />
+
+                <motion.div
+                  animate={{
+                    y: [0, -10, 0],
+                  }}
+                  transition={{
+                    duration: 4,
+                    repeat: Infinity,
+                    ease: "easeInOut",
+                  }}
+                  className="relative z-10"
+                >
+                  {template.preview}
+                </motion.div>
+
+                <div
+                  className="
+                    absolute
+                    bottom-5
+                    left-1/2
+                    -translate-x-1/2
+                    rounded-full
+                    bg-white
+                    px-5
+                    py-2
+                    text-sm
+                    font-black
+                    text-black
+                    opacity-0
+                    translate-y-3
+                    transition
+                    group-hover:opacity-100
+                    group-hover:translate-y-0
+                  "
+                >
+                  Start This Style
+                </div>
               </div>
 
               {/* TEMPLATE INFO */}
@@ -179,6 +243,21 @@ export default function Templates() {
               <p className="text-white/50 text-lg">
                 {template.desc}
               </p>
+
+              <div
+                className="
+                  mt-5
+                  h-1
+                  w-0
+                  rounded-full
+                  bg-gradient-to-r
+                  from-pink-400
+                  to-fuchsia-400
+                  transition-all
+                  duration-300
+                  group-hover:w-full
+                "
+              />
 
             </motion.div>
           ))}

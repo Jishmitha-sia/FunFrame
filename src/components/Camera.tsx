@@ -9,7 +9,7 @@ export type CameraHandle = {
   capture: () => string | null;
 };
 
-const Camera = forwardRef<CameraHandle>((props, ref) => {
+const Camera = forwardRef<CameraHandle>((_props, ref) => {
   const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {

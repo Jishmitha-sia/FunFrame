@@ -58,6 +58,9 @@ export default function Booth() {
 
   const [flash, setFlash] = useState(false);
 
+  const [retakeIndex, setRetakeIndex] =
+  useState<number | null>(null);
+
   const [stickersLayer, setStickersLayer] =
     useState<StickerType[]>([]);
 
@@ -212,7 +215,26 @@ export default function Booth() {
     const image =
       canvas.toDataURL("image/png");
 
-    setPhotos((prev) => [...prev, image]);
+    if (retakeIndex !== null) {
+
+  setPhotos((prev) => {
+    const updated = [...prev];
+
+    updated[retakeIndex] = image;
+
+    return updated;
+  });
+
+  setRetakeIndex(null);
+
+} else {
+
+  setPhotos((prev) => [
+    ...prev,
+    image,
+  ]);
+
+}
 
     setFlash(true);
 
@@ -583,66 +605,196 @@ export default function Booth() {
 
         </div>
 
-        {/* CAPTURED PHOTOS */}
+{/* CAPTURED PHOTOS */}
 
-        {photos.length > 0 && (
+{photos.length > 0 && (
 
-          <div className="mt-14">
+  <div className="mt-14">
 
-            <div className="flex items-center justify-between mb-8">
+    <div className="flex items-center justify-between mb-8">
 
-              <h2 className="text-4xl font-black">
-                Captured Shots
-              </h2>
+      <div>
 
-              <button
-                onClick={() => setPhotos([])}
-                className="
-                  border
-                  border-red-500
-                  text-red-400
-                  px-6
-                  py-3
-                  rounded-full
-                  hover:bg-red-500
-                  hover:text-white
-                  transition
-                "
-              >
-                Clear All
-              </button>
+        <h2 className="text-5xl font-black">
+          Captured Shots
+        </h2>
 
-            </div>
+        <p className="text-white/40 mt-2">
+          Tap any photo to manage your strip
+        </p>
 
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+      </div>
 
-              {photos.map((photo, index) => (
-                <motion.img
-                  key={index}
-                  initial={{
-                    opacity: 0,
-                    y: 40,
-                  }}
-                  animate={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  src={photo}
-                  alt=""
-                  className="
-                    rounded-[2rem]
-                    border
-                    border-white/10
-                    shadow-2xl
-                  "
-                />
-              ))}
+      <button
+        onClick={() => setPhotos([])}
+        className="
+          border
+          border-red-500/60
+          text-red-400
+          px-6
+          py-3
+          rounded-full
+          hover:bg-red-500
+          hover:text-white
+          transition
+          font-semibold
+        "
+      >
+        Clear All
+      </button>
 
-            </div>
+    </div>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+
+      {photos.map((photo, index) => (
+
+        <motion.div
+          key={index}
+          initial={{
+            opacity: 0,
+            y: 50,
+            scale: 0.9,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+            scale: 1,
+          }}
+          whileHover={{
+            y: -10,
+          }}
+          transition={{
+            duration: 0.35,
+          }}
+          className="
+            relative
+            group
+          "
+        >
+
+          {/* IMAGE */}
+
+          <div
+            className="
+              overflow-hidden
+              rounded-[2rem]
+              border
+              border-white/10
+              bg-[#0d0d0d]
+              shadow-[0_20px_80px_rgba(0,0,0,0.45)]
+            "
+          >
+
+            <img
+              src={photo}
+              alt=""
+              className="
+                w-full
+                aspect-[3/4]
+                object-cover
+                transition
+                duration-500
+                group-hover:scale-105
+              "
+            />
 
           </div>
-        )}
 
+          {/* INDEX */}
+
+          <div
+            className="
+              absolute
+              top-4
+              left-4
+              bg-black/70
+              backdrop-blur-xl
+              px-4
+              py-2
+              rounded-full
+              text-sm
+              font-bold
+              border
+              border-white/10
+            "
+          >
+            Shot {index + 1}
+          </div>
+
+          {/* ACTIONS */}
+
+          <div
+            className="
+              absolute
+              inset-x-0
+              bottom-4
+              flex
+              justify-center
+              gap-3
+              opacity-0
+              group-hover:opacity-100
+              transition
+            "
+          >
+
+            {/* RETAKE */}
+
+            <button
+onClick={() => {
+  setRetakeIndex(index);
+
+  startCountdownCapture();
+}}
+              className="
+                bg-white
+                text-black
+                px-5
+                py-2.5
+                rounded-full
+                font-bold
+                hover:scale-105
+                transition
+                shadow-xl
+              "
+            >
+              Retake
+            </button>
+
+            {/* DELETE */}
+
+            <button
+              onClick={() => {
+                const updated = [...photos];
+
+                updated.splice(index, 1);
+
+                setPhotos(updated);
+              }}
+              className="
+                bg-red-500
+                text-white
+                px-5
+                py-2.5
+                rounded-full
+                font-bold
+                hover:scale-105
+                transition
+                shadow-xl
+              "
+            >
+              Delete
+            </button>
+
+          </div>
+
+        </motion.div>
+      ))}
+
+    </div>
+
+  </div>
+)}
       </div>
     </div>
   );

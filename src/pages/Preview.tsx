@@ -6,9 +6,11 @@ import {
 
 import {
   useRef,
+  useState,
 } from "react";
 
 import html2canvas from "html2canvas";
+import gifshot from "gifshot";
 
 export default function Preview() {
   const navigate = useNavigate();
@@ -23,6 +25,12 @@ export default function Preview() {
 
   const previewRef =
     useRef<HTMLDivElement | null>(null);
+  
+  const [creatingGif, setCreatingGif] =
+  useState(false);
+
+const [gifUrl, setGifUrl] =
+  useState<string | null>(null); 
 
   const downloadStrip = async () => {
   if (!previewRef.current) return;
@@ -60,6 +68,33 @@ export default function Preview() {
     alert("Download failed");
   }
 };
+
+const createGif = async () => {
+
+  if (!photos.length) return;
+
+  setCreatingGif(true);
+
+  gifshot.createGIF(
+    {
+      images: photos,
+      gifWidth: 500,
+      gifHeight: 700,
+      interval: 0.7,
+    },
+
+    (obj: any) => {
+
+      if (!obj.error) {
+
+        setGifUrl(obj.image);
+
+      }
+
+      setCreatingGif(false);
+    }
+  );
+};  
 
   const renderTemplate = () => {
     switch (template) {
@@ -271,25 +306,49 @@ export default function Preview() {
 
           </div>
 
-          <button
-            onClick={downloadStrip}
-            className="
-              bg-gradient-to-r
-              from-pink-500
-              to-fuchsia-500
-              hover:from-pink-400
-              hover:to-fuchsia-400
-              px-8
-              py-4
-              rounded-full
-              font-bold
-              text-lg
-              transition
-              shadow-[0_10px_40px_rgba(236,72,153,0.35)]
-            "
-          >
-            Download
-          </button>
+          <div className="flex gap-4">
+
+  <button
+    onClick={createGif}
+    className="
+      bg-white/10
+      border
+      border-white/10
+      hover:border-pink-400
+      px-7
+      py-4
+      rounded-full
+      font-bold
+      text-lg
+      transition
+    "
+  >
+    {creatingGif
+      ? "Creating..."
+      : "Create GIF"}
+  </button>
+
+  <button
+    onClick={downloadStrip}
+    className="
+      bg-gradient-to-r
+      from-pink-500
+      to-fuchsia-500
+      hover:from-pink-400
+      hover:to-fuchsia-400
+      px-8
+      py-4
+      rounded-full
+      font-bold
+      text-lg
+      transition
+      shadow-[0_10px_40px_rgba(236,72,153,0.35)]
+    "
+  >
+    Download PNG
+  </button>
+
+</div>
 
         </div>
 
@@ -327,6 +386,64 @@ export default function Preview() {
             {renderTemplate()}
 
           </motion.div>
+          {gifUrl && (
+
+  <motion.div
+    initial={{
+      opacity: 0,
+      y: 40,
+    }}
+    animate={{
+      opacity: 1,
+      y: 0,
+    }}
+    className="
+      mt-20
+      flex
+      flex-col
+      items-center
+    "
+  >
+
+    <h2 className="text-4xl font-black mb-8">
+      Animated GIF
+    </h2>
+
+    <img
+      src={gifUrl}
+      alt=""
+      className="
+        rounded-[2rem]
+        border
+        border-white/10
+        w-[320px]
+        shadow-2xl
+      "
+    />
+
+    <a
+      href={gifUrl}
+      download="funframe.gif"
+      className="
+        mt-8
+        bg-gradient-to-r
+        from-pink-500
+        to-fuchsia-500
+        hover:from-pink-400
+        hover:to-fuchsia-400
+        px-8
+        py-4
+        rounded-full
+        font-bold
+        text-lg
+        transition
+      "
+    >
+      Download GIF
+    </a>
+
+  </motion.div>
+)}
 
         </div>
 

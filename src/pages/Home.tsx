@@ -6,6 +6,13 @@ import {
   Download,
   ChevronDown,
 } from "lucide-react";
+import {
+  FaFacebookF,
+  FaXTwitter,
+  FaInstagram,
+  FaLinkedinIn,
+  FaTwitch,
+} from "react-icons/fa6";
 import { useState } from "react";
 
 const features = [
@@ -487,77 +494,195 @@ export default function Home() {
 
       </section>
 
-      {/* BLOCK 4 INSPIRED CTA */}
+{/* CINEMATIC FLOATING CTA SECTION */}
 
-      <section className="relative py-40 overflow-hidden">
+<section className="relative py-40 px-6 overflow-hidden">
 
-        <div className="absolute inset-0">
+  {/* BACKGROUND IMAGE */}
 
-          <img
-            src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=2070&auto=format&fit=crop"
-            alt=""
-            className="w-full h-full object-cover"
-          />
+  <div className="absolute inset-0">
 
-          <div className="absolute inset-0 bg-black/70" />
+    <motion.img
+      initial={{ scale: 1.12 }}
+      whileInView={{ scale: 1 }}
+      transition={{ duration: 2 }}
+      viewport={{ once: true }}
+      src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=2070&auto=format&fit=crop"
+      alt=""
+      className="
+        w-full
+        h-full
+        object-cover
+      "
+    />
 
-        </div>
+    {/* DARK OVERLAY */}
 
-        <div className="relative z-10 max-w-5xl mx-auto px-6">
+    <div className="absolute inset-0 bg-black/20" />
 
-          <motion.div
-            initial={{ opacity: 0, y: 60 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1 }}
-            viewport={{ once: true }}
-            className="
-              bg-white/10
-              backdrop-blur-2xl
-              border
-              border-white/10
-              rounded-[3rem]
-              p-16
-              text-center
-            "
-          >
+    {/* CINEMATIC COLOR OVERLAY */}
 
-            <p className="uppercase tracking-[0.4em] text-pink-400 text-sm mb-6">
-              Capture Together
-            </p>
+    <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/40" />
 
-            <h2 className="text-5xl md:text-7xl font-black leading-tight mb-8">
-              Turn Every
-              <br />
-              Moment Viral
-            </h2>
+  </div>
 
-            <p className="text-white/70 text-xl leading-relaxed max-w-3xl mx-auto mb-12">
-              Premium cinematic booths designed for creators,
-              parties, events and unforgettable social moments.
-            </p>
+  {/* FLOATING LIGHTS */}
 
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate("/templates")}
-              className="
-                bg-white
-                text-black
-                px-10
-                py-5
-                rounded-full
-                text-xl
-                font-black
-              "
-            >
-              Start Capturing
-            </motion.button>
+  <motion.div
+    animate={{
+      y: [0, -30, 0],
+      x: [0, 20, 0],
+    }}
+    transition={{
+      duration: 8,
+      repeat: Infinity,
+    }}
+    className="
+      absolute
+      top-20
+      left-20
+      w-[320px]
+      h-[320px]
+      bg-pink-500/20
+      blur-[140px]
+      rounded-full
+    "
+  />
 
-          </motion.div>
+  <motion.div
+    animate={{
+      y: [0, 30, 0],
+      x: [0, -20, 0],
+    }}
+    transition={{
+      duration: 10,
+      repeat: Infinity,
+    }}
+    className="
+      absolute
+      bottom-20
+      right-20
+      w-[320px]
+      h-[320px]
+      bg-purple-500/20
+      blur-[140px]
+      rounded-full
+    "
+  />
 
-        </div>
+  {/* FLOATING GLASS CARD */}
 
-      </section>
+  <div className="relative z-10 max-w-5xl mx-auto">
+
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: 100,
+        scale: 0.92,
+      }}
+      whileInView={{
+        opacity: 1,
+        y: 0,
+        scale: 1,
+      }}
+      transition={{
+        duration: 1,
+        ease: "easeOut",
+      }}
+      viewport={{ once: true }}
+      animate={{
+        y: [0, -10, 0],
+      }}
+      className="
+        bg-white/10
+        backdrop-blur-2xl
+        border
+        border-white/10
+        rounded-[3rem]
+        px-8
+        py-20
+        md:px-20
+        text-center
+        shadow-[0_30px_120px_rgba(0,0,0,0.45)]
+      "
+    >
+
+      <motion.div
+        animate={{
+          y: [0, -12, 0],
+        }}
+        transition={{
+          duration: 5,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      >
+
+        <p className="uppercase tracking-[0.45em] text-pink-400 text-sm mb-8">
+          Capture Together
+        </p>
+
+        <h2 className="
+          text-5xl
+          md:text-7xl
+          font-black
+          leading-[0.95]
+          mb-10
+        ">
+          Capture Joyful
+          <br />
+          Moments
+          <br />
+          Together
+        </h2>
+
+        <p className="
+          text-white/70
+          text-xl
+          leading-relaxed
+          max-w-3xl
+          mx-auto
+          mb-12
+        ">
+          Premium cinematic booths designed for creators,
+          weddings, parties, aesthetic reels, events and
+          unforgettable social moments.
+        </p>
+
+        <motion.button
+          whileHover={{
+            scale: 1.08,
+          }}
+          whileTap={{
+            scale: 0.95,
+          }}
+          onClick={() => navigate("/templates")}
+          className="
+            bg-gradient-to-r 
+            from-pink-500 
+            to-fuchsia-500
+            hover:from-pink-400 
+            hover:to-fuchsia-400
+            text-white
+            px-12
+            py-5
+            rounded-full
+            text-xl
+            font-black
+            transition
+            shadow-2xl
+          "
+        >
+          Start Capturing
+        </motion.button>
+
+      </motion.div>
+
+    </motion.div>
+
+  </div>
+
+</section>
 
       {/* FEATURES */}
 
@@ -724,55 +849,261 @@ export default function Home() {
 
       </section>
 
-      {/* FOOTER */}
+      {/* CONTACT SECTION */}
 
-      <footer className="border-t border-white/10 py-14 px-6 bg-[#050505]">
+      <section className="relative py-32 px-6 bg-[#050505] overflow-hidden">
 
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-8 items-center">
+  <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-pink-500/10 blur-[140px] rounded-full" />
 
-          <div>
+  <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-purple-500/10 blur-[140px] rounded-full" />
 
-            <h2
+        <div className="max-w-5xl mx-auto">
+
+          <motion.div
+            initial={{ opacity: 0, y: 70 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9 }}
+            viewport={{ once: true }}
+          >
+
+            <div className="text-center mb-16">
+
+              <h2 className="text-6xl md:text-7xl font-black text-white mb-6">
+                Get In Touch
+              </h2>
+
+              <p className="text-white/60 text-xl">
+                Have questions, ideas or collaboration requests?
+              </p>
+
+            </div>
+
+            <div
+className="
+  bg-white/5
+  backdrop-blur-2xl
+  border
+  border-white/10
+  rounded-[3rem]
+  p-8
+  md:p-12
+  shadow-[0_20px_80px_rgba(236,72,153,0.08)]
+"
+            >
+
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
+
+                <input
+                  type="text"
+                  placeholder="Name"
+                  className="
+                    bg-white/5
+                    border
+                    border-white/10
+                    rounded-full
+                    px-8
+                    py-6
+                    text-white
+                    text-lg
+                    outline-none
+                    focus:border-pink-400
+                    transition
+                  "
+                />
+
+                <input
+                  type="email"
+                  placeholder="Email"
+                  className="
+                    bg-white/5
+                    border
+                    border-white/10
+                    rounded-full
+                    px-8
+                    py-6
+                    text-white
+                    text-lg
+                    outline-none
+                    focus:border-pink-400
+                    transition
+                  "
+                />
+
+              </div>
+
+              <textarea
+                placeholder="Message"
+                rows={5}
+                className="
+                  w-full
+                  bg-white/5
+                  border
+                  border-white/10
+                  rounded-[2rem]
+                  px-8
+                  py-6
+                  text-white
+                  text-lg
+                  outline-none
+                  resize-none
+                  focus:border-pink-400
+                  transition
+                  mb-8
+                "
+              />
+
+              <div className="flex justify-center">
+
+                <motion.button
+                  whileHover={{
+                    scale: 1.05,
+                  }}
+                  whileTap={{
+                    scale: 0.95,
+                  }}
+                  className="
+                    bg-[#f08a52]
+                    hover:bg-[#ff9c66]
+                    text-white
+                    px-12
+                    py-5
+                    rounded-full
+                    text-xl
+                    font-black
+                    transition
+                    shadow-xl
+                  "
+                >
+                  Send Message
+                </motion.button>
+
+              </div>
+
+            </div>
+
+          </motion.div>
+
+        </div>
+
+      </section>
+
+      {/* PREMIUM FOOTER */}
+
+      <footer className="relative bg-black py-24 px-6 overflow-hidden">
+
+        <div className="absolute inset-0">
+
+          <div className="absolute top-0 left-1/4 w-[300px] h-[300px] bg-pink-500/10 blur-[120px] rounded-full" />
+
+          <div className="absolute bottom-0 right-1/4 w-[300px] h-[300px] bg-purple-500/10 blur-[120px] rounded-full" />
+
+        </div>
+
+        <div className="relative z-10 max-w-6xl mx-auto">
+
+          {/* NAV LINKS */}
+
+          <div className="flex flex-wrap justify-center gap-10 mb-16">
+
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
               className="
-                text-5xl
-                font-black
-                bg-gradient-to-r
-                from-pink-400
-                to-purple-500
-                bg-clip-text
-                text-transparent
-                mb-4
+                text-3xl
+                font-semibold
+                text-white
+                hover:text-pink-400
+                transition
               "
             >
-              FunFrame
-            </h2>
+              Home
+            </button>
 
-            <p className="text-white/50">
-              Premium cinematic photobooth experience.
-            </p>
+            <button
+              onClick={() => navigate("/templates")}
+              className="
+                text-3xl
+                font-semibold
+                text-white
+                hover:text-pink-400
+                transition
+              "
+            >
+              Templates
+            </button>
+
+            <button
+              onClick={() => navigate("/preview")}
+              className="
+                text-3xl
+                font-semibold
+                text-white
+                hover:text-pink-400
+                transition
+              "
+            >
+              Gallery
+            </button>
+
+            <button
+              className="
+                text-3xl
+                font-semibold
+                text-white
+                hover:text-pink-400
+                transition
+              "
+            >
+              Support
+            </button>
 
           </div>
 
-          <div className="flex gap-8 text-white/60 text-lg">
+{/* SOCIALS */}
 
-            <button className="hover:text-pink-400 transition">
-              Instagram
-            </button>
+<div className="flex justify-center gap-6 mb-16">
 
-            <button className="hover:text-pink-400 transition">
-              TikTok
-            </button>
+  {[
+  <FaFacebookF size={34} />,
+  <FaXTwitter size={34} />,
+  <FaInstagram size={34} />,
+  <FaLinkedinIn size={34} />,
+  <FaTwitch size={34} />,
+].map((icon, index) => (
 
-            <button className="hover:text-pink-400 transition">
-              YouTube
-            </button>
+    <motion.div
+      key={index}
+      whileHover={{
+        scale: 1.12,
+        y: -6,
+      }}
+      className="
+        w-20
+        h-20
+        rounded-full
+        bg-white
+        text-black
+        flex
+        items-center
+        justify-center
+        cursor-pointer
+        transition
+      "
+    >
+      {icon}
+    </motion.div>
 
-          </div>
+  ))}
+
+</div>
+          {/* COPYRIGHT */}
+
+          <p className="text-center text-white/60 text-xl">
+            © 2026 FunFrame. All Rights Reserved.
+          </p>
 
         </div>
 
       </footer>
-
     </div>
   );
 }

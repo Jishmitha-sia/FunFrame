@@ -1,4 +1,8 @@
-import { motion } from "framer-motion";
+import {
+  motion,
+  useMotionValue,
+  useTransform,
+} from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
   Camera,
@@ -67,6 +71,12 @@ export default function Home() {
   const navigate = useNavigate();
 
   const [openFAQ, setOpenFAQ] = useState<number | null>(0);
+  const mouseX = useMotionValue(0);
+const mouseY = useMotionValue(0);
+
+const rotateX = useTransform(mouseY, [-300, 300], [10, -10]);
+
+const rotateY = useTransform(mouseX, [-300, 300], [-10, 10]);
 
   return (
     <div className="bg-black text-white overflow-hidden">
@@ -328,14 +338,31 @@ export default function Home() {
 
           </motion.div>
 
+
           {/* RIGHT */}
 
-          <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1 }}
-            className="relative h-[750px] hidden lg:block"
-          >
+<motion.div
+  initial={{ opacity: 0, scale: 0.9 }}
+  animate={{ opacity: 1, scale: 1 }}
+  transition={{ duration: 1 }}
+  style={{
+    rotateX,
+    rotateY,
+    transformPerspective: 1200,
+  }}
+  onMouseMove={(e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+
+    mouseX.set(
+      e.clientX - rect.left - rect.width / 2
+    );
+
+    mouseY.set(
+      e.clientY - rect.top - rect.height / 2
+    );
+  }}
+  className="relative h-[750px] hidden lg:block"
+>
 
             <motion.div
               animate={{ y: [0, -20, 0] }}
@@ -503,9 +530,17 @@ export default function Home() {
   <div className="absolute inset-0">
 
     <motion.img
-      initial={{ scale: 1.12 }}
-      whileInView={{ scale: 1 }}
-      transition={{ duration: 2 }}
+      initial={{
+        scale: 1.15,
+        y: 80,
+      }}
+      whileInView={{
+        scale: 1,
+        y: 0,
+      }}
+      transition={{
+        duration: 2,
+      }}
       viewport={{ once: true }}
       src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?q=80&w=2070&auto=format&fit=crop"
       alt=""
@@ -516,11 +551,9 @@ export default function Home() {
       "
     />
 
-    {/* DARK OVERLAY */}
+    {/* SOFT OVERLAYS */}
 
     <div className="absolute inset-0 bg-black/20" />
-
-    {/* CINEMATIC COLOR OVERLAY */}
 
     <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/40" />
 
@@ -530,47 +563,49 @@ export default function Home() {
 
   <motion.div
     animate={{
-      y: [0, -30, 0],
-      x: [0, 20, 0],
+      y: [0, -40, 0],
+      x: [0, 30, 0],
     }}
     transition={{
-      duration: 8,
+      duration: 9,
       repeat: Infinity,
+      ease: "easeInOut",
     }}
     className="
       absolute
       top-20
       left-20
-      w-[320px]
-      h-[320px]
+      w-[340px]
+      h-[340px]
       bg-pink-500/20
-      blur-[140px]
+      blur-[150px]
       rounded-full
     "
   />
 
   <motion.div
     animate={{
-      y: [0, 30, 0],
-      x: [0, -20, 0],
+      y: [0, 35, 0],
+      x: [0, -25, 0],
     }}
     transition={{
-      duration: 10,
+      duration: 11,
       repeat: Infinity,
+      ease: "easeInOut",
     }}
     className="
       absolute
       bottom-20
       right-20
-      w-[320px]
-      h-[320px]
+      w-[340px]
+      h-[340px]
       bg-purple-500/20
-      blur-[140px]
+      blur-[150px]
       rounded-full
     "
   />
 
-  {/* FLOATING GLASS CARD */}
+  {/* FLOATING CARD */}
 
   <div className="relative z-10 max-w-5xl mx-auto">
 
@@ -591,9 +626,11 @@ export default function Home() {
       }}
       viewport={{ once: true }}
       animate={{
-        y: [0, -10, 0],
+        y: [0, -12, 0],
       }}
       className="
+        relative
+        overflow-hidden
         bg-white/10
         backdrop-blur-2xl
         border
@@ -607,28 +644,62 @@ export default function Home() {
       "
     >
 
+      {/* LIGHT SWEEP */}
+
       <motion.div
         animate={{
-          y: [0, -12, 0],
+          x: ["-120%", "120%"],
+        }}
+        transition={{
+          repeat: Infinity,
+          duration: 4,
+          ease: "linear",
+        }}
+        className="
+          absolute
+          top-0
+          left-0
+          w-1/3
+          h-full
+          bg-white/10
+          blur-3xl
+          rotate-12
+        "
+      />
+
+      {/* FLOATING CONTENT */}
+
+      <motion.div
+        animate={{
+          y: [0, -10, 0],
         }}
         transition={{
           duration: 5,
           repeat: Infinity,
           ease: "easeInOut",
         }}
+        className="relative z-10"
       >
 
         <p className="uppercase tracking-[0.45em] text-pink-400 text-sm mb-8">
           Capture Together
         </p>
 
-        <h2 className="
-          text-5xl
-          md:text-7xl
-          font-black
-          leading-[0.95]
-          mb-10
-        ">
+        <h2
+          className="
+            text-5xl
+            md:text-7xl
+            font-black
+            leading-[0.95]
+            mb-10
+            bg-gradient-to-r
+            from-white
+            via-pink-200
+            to-purple-300
+            bg-clip-text
+            text-transparent
+          "
+        >
           Capture Joyful
           <br />
           Moments
@@ -636,14 +707,16 @@ export default function Home() {
           Together
         </h2>
 
-        <p className="
-          text-white/70
-          text-xl
-          leading-relaxed
-          max-w-3xl
-          mx-auto
-          mb-12
-        ">
+        <p
+          className="
+            text-white/70
+            text-xl
+            leading-relaxed
+            max-w-3xl
+            mx-auto
+            mb-12
+          "
+        >
           Premium cinematic booths designed for creators,
           weddings, parties, aesthetic reels, events and
           unforgettable social moments.
@@ -652,16 +725,17 @@ export default function Home() {
         <motion.button
           whileHover={{
             scale: 1.08,
+            y: -3,
           }}
           whileTap={{
             scale: 0.95,
           }}
           onClick={() => navigate("/templates")}
           className="
-            bg-gradient-to-r 
-            from-pink-500 
+            bg-gradient-to-r
+            from-pink-500
             to-fuchsia-500
-            hover:from-pink-400 
+            hover:from-pink-400
             hover:to-fuchsia-400
             text-white
             px-12
@@ -670,7 +744,7 @@ export default function Home() {
             text-xl
             font-black
             transition
-            shadow-2xl
+            shadow-[0_10px_40px_rgba(236,72,153,0.45)]
           "
         >
           Start Capturing
@@ -696,7 +770,12 @@ export default function Home() {
 
               <motion.div
                 key={index}
-                whileHover={{ y: -10 }}
+                whileHover={{
+  y: -12,
+  rotateX: 5,
+  rotateY: -5,
+  scale: 1.02,
+}}
                 className="
                   bg-[#090909]
                   border
@@ -962,8 +1041,8 @@ className="
                     scale: 0.95,
                   }}
                   className="
-                    bg-[#f08a52]
-                    hover:bg-[#ff9c66]
+                    bg-gradient-to-r from-pink-500 to-fuchsia-500
+                    hover:from-pink-400 hover:to-fuchsia-400
                     text-white
                     px-12
                     py-5
@@ -1073,9 +1152,10 @@ className="
     <motion.div
       key={index}
       whileHover={{
-        scale: 1.12,
-        y: -6,
-      }}
+  scale: 1.15,
+  y: -10,
+  rotate: 8,
+}}
       className="
         w-20
         h-20

@@ -1,73 +1,184 @@
-# React + TypeScript + Vite
+# 📸 FunFrame — Cinematic Photobooth Studio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A premium, browser-based photobooth web app built with **React**, **TypeScript**, **Tailwind CSS v4**, and **Framer Motion**. Capture photos with live filters, choose from beautiful templates, generate animated GIFs, and download high-quality photo strips — all in the browser, no backend required.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Features
 
-## React Compiler
+### 🎬 Live Camera Booth
+- Real-time webcam feed with **8 cinematic filters**: Normal, Noir, Dreamy, Cyberpunk, Warm, VHS, Pop, Cool
+- **3-second countdown** with animated overlay before each shot
+- **Shutter sound** synthesized via the Web Audio API (no audio files needed)
+- **Flash effect** on capture for an authentic photobooth feel
+- **Pose prompts** and "Booth Director" lines to guide your shots
+- **Draggable emoji stickers** (✨ 💖 🎀 😎 🔥 🌸) that can be resized and removed
+- **Retake** any individual photo without restarting the session
+- Progress bar showing how many shots have been taken
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🖼️ Template Styles
+| Template | Photos | Layout |
+|---|---|---|
+| Classic Strip | 4 | Vertical strip |
+| Polaroid | 1 | Single framed photo |
+| Film Roll | 3 | Cinematic dark strip |
+| Square Grid | 4 | 2×2 grid |
 
-## Expanding the ESLint configuration
+### 🎨 Preview & Personalization
+- Live preview of your chosen template with your captured photos
+- Customize **event title**, **tagline**, and **footer note**
+- Choose an **accent color** (Pink, Violet, Gold, Mint) applied to the strip
+- **Download as PNG** — high-resolution canvas-rendered strip
+- **Create & download an animated GIF** from your photos (via gifshot)
+- **QR code** auto-generated from your event info for easy sharing
+- **Share or copy** link via the Web Share API (falls back to clipboard)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🏠 Landing Page
+- Cinematic hero section with animated floating photo cards and 3D mouse-tracking tilt
+- Auto-scrolling gallery of sample images
+- Feature highlights, FAQ accordion, and contact form section
+- Smooth Framer Motion animations throughout
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🛠️ Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+| Technology | Purpose |
+|---|---|
+| [React 19](https://react.dev/) | UI framework |
+| [TypeScript](https://www.typescriptlang.org/) | Type safety |
+| [Vite](https://vitejs.dev/) | Build tool & dev server |
+| [Tailwind CSS v4](https://tailwindcss.com/) | Utility-first styling |
+| [Framer Motion](https://www.framer.com/motion/) | Animations & gestures |
+| [React Router v7](https://reactrouter.com/) | Client-side routing |
+| [gifshot](https://github.com/yahoo/gifshot) | Animated GIF generation |
+| [html2canvas](https://html2canvas.hertzen.com/) | Canvas rendering |
+| [lucide-react](https://lucide.dev/) | Icons |
+| [react-icons](https://react-icons.github.io/react-icons/) | Social media icons |
+| Web Audio API | Synthesized shutter sound |
+| MediaDevices API | Webcam access |
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- [Node.js](https://nodejs.org/) v18 or higher
+- npm (comes with Node.js)
+
+### Installation
+
+```bash
+# Clone the repository
+git clone git@github.com:Jishmitha-sia/FunFrame.git
+cd FunFrame
+
+# Install dependencies
+npm install
+
+# Start the development server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Open [http://localhost:5173](http://localhost:5173) in your browser.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+> **Note:** The app requires camera access. Make sure to allow webcam permissions when prompted by the browser.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### Build for Production
+
+```bash
+npm run build
 ```
+
+The production-ready files will be output to the `dist/` folder.
+
+### Preview Production Build
+
+```bash
+npm run preview
+```
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+├── pages/
+│   ├── Home.tsx          # Landing page with hero, gallery, features & FAQ
+│   ├── Templates.tsx     # Template selection page
+│   ├── Booth.tsx         # Live camera booth with filters & stickers
+│   └── Preview.tsx       # Photo strip preview, download & sharing
+├── components/
+│   ├── Camera.tsx        # Camera component
+│   ├── PhotoPreview.tsx  # Individual photo preview
+│   └── StripPreview.tsx  # Strip layout preview
+├── hooks/                # Custom React hooks
+├── store/                # State management
+├── utils/
+│   ├── generateGif.ts    # GIF generation utilities
+│   └── generateStrip.ts  # Photo strip canvas utilities
+├── types/
+│   ├── theme.ts          # Theme type definitions
+│   ├── gif.d.ts          # gif.js type declarations
+│   └── gifshot.d.ts      # gifshot type declarations
+├── App.tsx               # Root component with routing
+└── main.tsx              # Application entry point
+```
+
+---
+
+## 🗺️ App Flow
+
+```
+/ (Home)  →  /templates (Pick a style)  →  /booth (Capture photos)  →  /preview (Download & share)
+```
+
+1. **Home** — Learn about FunFrame and click "Launch Booth" or "Start Capturing"
+2. **Templates** — Choose from Classic Strip, Polaroid, Film Roll, or Square Grid
+3. **Booth** — Take photos with live filters, stickers, and pose prompts; auto-advances when all shots are taken
+4. **Preview** — Personalize your strip, download as PNG, generate a GIF, or share via QR code
+
+---
+
+## 🎛️ Available Filters
+
+| Filter | Effect |
+|---|---|
+| Normal | No filter |
+| Noir | Grayscale + high contrast |
+| Dreamy | Bright, soft, slightly blurred |
+| Cyberpunk | High contrast + hue-rotated neon |
+| Warm | Sepia + warm tones |
+| VHS | Desaturated + low brightness |
+| Pop | Hyper-saturated + contrast |
+| Cool | Blue-shifted hue rotation |
+
+---
+
+## 📜 Scripts
+
+| Command | Description |
+|---|---|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run preview` | Preview production build |
+| `npm run lint` | Run ESLint |
+
+---
+
+## 🌐 Browser Compatibility
+
+FunFrame uses modern browser APIs:
+- **MediaDevices API** — for webcam access (requires HTTPS in production or `localhost`)
+- **Web Audio API** — for the shutter sound effect
+- **Canvas API** — for photo capture and strip rendering
+- **Web Share API** — for native sharing (falls back to clipboard copy)
+
+Recommended browsers: **Chrome**, **Edge**, **Firefox**, **Safari** (latest versions).
+
+---
+
+## 📄 License
+
+This project is private. All rights reserved.

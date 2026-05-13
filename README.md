@@ -4,7 +4,7 @@ A premium, browser-based photobooth web app built with **React**, **TypeScript**
 
 ---
 
-## ✨ Features
+## Features
 
 ### 🎬 Live Camera Booth
 - Real-time webcam feed with **8 cinematic filters**: Normal, Noir, Dreamy, Cyberpunk, Warm, VHS, Pop, Cool

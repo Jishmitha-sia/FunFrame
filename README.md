@@ -1,4 +1,4 @@
-# 📸 FunFrame — Cinematic Photobooth Studio
+# FunFrame — Cinematic Photobooth Studio
 
 A premium, browser-based photobooth web app built with **React**, **TypeScript**, **Tailwind CSS v4**, and **Framer Motion**. Capture photos with live filters, choose from beautiful templates, generate animated GIFs, and download high-quality photo strips — all in the browser, no backend required.
 
@@ -6,7 +6,7 @@ A premium, browser-based photobooth web app built with **React**, **TypeScript**
 
 ## Features
 
-### 🎬 Live Camera Booth
+### Live Camera Booth
 - Real-time webcam feed with **8 cinematic filters**: Normal, Noir, Dreamy, Cyberpunk, Warm, VHS, Pop, Cool
 - **3-second countdown** with animated overlay before each shot
 - **Shutter sound** synthesized via the Web Audio API (no audio files needed)
@@ -16,7 +16,7 @@ A premium, browser-based photobooth web app built with **React**, **TypeScript**
 - **Retake** any individual photo without restarting the session
 - Progress bar showing how many shots have been taken
 
-### 🖼️ Template Styles
+### Template Styles
 | Template | Photos | Layout |
 |---|---|---|
 | Classic Strip | 4 | Vertical strip |
@@ -24,7 +24,7 @@ A premium, browser-based photobooth web app built with **React**, **TypeScript**
 | Film Roll | 3 | Cinematic dark strip |
 | Square Grid | 4 | 2×2 grid |
 
-### 🎨 Preview & Personalization
+### Preview & Personalization
 - Live preview of your chosen template with your captured photos
 - Customize **event title**, **tagline**, and **footer note**
 - Choose an **accent color** (Pink, Violet, Gold, Mint) applied to the strip
@@ -33,7 +33,7 @@ A premium, browser-based photobooth web app built with **React**, **TypeScript**
 - **QR code** auto-generated from your event info for easy sharing
 - **Share or copy** link via the Web Share API (falls back to clipboard)
 
-### 🏠 Landing Page
+### Landing Page
 - Cinematic hero section with animated floating photo cards and 3D mouse-tracking tilt
 - Auto-scrolling gallery of sample images
 - Feature highlights, FAQ accordion, and contact form section
@@ -41,7 +41,7 @@ A premium, browser-based photobooth web app built with **React**, **TypeScript**
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Technology | Purpose |
 |---|---|
@@ -60,7 +60,7 @@ A premium, browser-based photobooth web app built with **React**, **TypeScript**
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - [Node.js](https://nodejs.org/) v18 or higher
@@ -100,7 +100,7 @@ npm run preview
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 src/
@@ -128,7 +128,7 @@ src/
 
 ---
 
-## 🗺️ App Flow
+## App Flow
 
 ```
 / (Home)  →  /templates (Pick a style)  →  /booth (Capture photos)  →  /preview (Download & share)
@@ -141,7 +141,7 @@ src/
 
 ---
 
-## 🎛️ Available Filters
+## Available Filters
 
 | Filter | Effect |
 |---|---|
@@ -156,7 +156,7 @@ src/
 
 ---
 
-## 📜 Scripts
+## Scripts
 
 | Command | Description |
 |---|---|
@@ -167,18 +167,12 @@ src/
 
 ---
 
-## 🌐 Browser Compatibility
-
-FunFrame uses modern browser APIs:
-- **MediaDevices API** — for webcam access (requires HTTPS in production or `localhost`)
-- **Web Audio API** — for the shutter sound effect
-- **Canvas API** — for photo capture and strip rendering
-- **Web Share API** — for native sharing (falls back to clipboard copy)
+## Browser Compatibility
 
 Recommended browsers: **Chrome**, **Edge**, **Firefox**, **Safari** (latest versions).
 
 ---
 
-## 📄 License
+## License
 
 This project is private. All rights reserved.
